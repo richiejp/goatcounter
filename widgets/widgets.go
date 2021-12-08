@@ -149,6 +149,7 @@ func ListAllWidgets() List {
 		NewWidget("browsers", 0),
 		NewWidget("locations", 0),
 		NewWidget("languages", 0),
+		NewWidget("entrypages", 0),
 		NewWidget("pages", 0),
 		NewWidget("sizes", 0),
 		NewWidget("systems", 0),
@@ -183,6 +184,8 @@ func NewWidget(name string, id int) Widget {
 		return &Locations{id: id}
 	case "languages":
 		return &Languages{id: id}
+	case "entrypages":
+		return &EntryPages{id: id}
 	}
 	zlog.Errorf("unknown widget: %q", name)
 	return &Dummy{}

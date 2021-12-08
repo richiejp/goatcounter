@@ -351,3 +351,40 @@ func (h *HitStats) ListCampaign(ctx context.Context, campaign int64, rng ztime.R
 	}
 	return errors.Wrap(err, "HitStats.ListCampaign")
 }
+
+// ListEntryPages lists all EntryPages statistics for the given time period.
+func (h *HitStats) ListEntryPages(ctx context.Context, rng ztime.Range, pathFilter []int64, limit, offset int) error {
+	user := MustGetUser(ctx)
+	err := zdb.Select(ctx, &h.Stats, "load:hit_stats.ListEntryPages", zdb.P{
+		"site":  MustGetSite(ctx).ID,
+		"start": asUTCDate(user, rng.Start),
+		"end":   asUTCDate(user, rng.End),
+		// "filter": pathFilter, TODO
+		"limit":  limit + 1,
+		"offset": offset,
+	})
+	if len(h.Stats) > limit {
+		h.More = true
+		h.Stats = h.Stats[:len(h.Stats)-1]
+	}
+	return errors.Wrap(err, "HitStats.ListEntryPages")
+}
+
+// ListEntryPage lists all EntryPage statistics for the given time period.
+func (h *HitStats) ListEntryPage(ctx context.Context, pathID string, rng ztime.Range, pathFilter []int64, limit, offset int) error {
+	user := MustGetUser(ctx)
+	err := zdb.Select(ctx, &h.Stats, "load:hit_stats.ListEntryPage", zdb.P{
+		"site":    MustGetSite(ctx).ID,
+		"start":   asUTCDate(user, rng.Start),
+		"end":     asUTCDate(user, rng.End),
+		"path_id": pathID,
+		// "filter": pathFilter, TODO
+		"limit":  limit + 1,
+		"offset": offset,
+	})
+	if len(h.Stats) > limit {
+		h.More = true
+		h.Stats = h.Stats[:len(h.Stats)-1]
+	}
+	return errors.Wrap(err, "HitStats.ListEntryPage")
+}

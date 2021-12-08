@@ -1,0 +1,54 @@
+create table session_stats (
+    site_id         int         not null,
+
+    session         {{blob}}    not null,
+    first_visit     timestamp   not null,
+    first_path      int         not null,
+
+    -- campaign_id    integer        not null,
+
+    last_visit      timestamp,
+    last_path       int,
+    paths           {{jsonb}}
+
+	-- constraint "session_stats#site_id#session" unique(site_id, session) {{sqlite "on conflict replace"}}
+);
+
+insert into session_stats
+    with x as (
+        select
+            site_id,
+            session,
+            min(hit_id)        as first_hit,
+            max(hit_id)        as last_hit,
+            jsonb_agg(path_id) as paths
+        from hits
+		where site_id = 4
+        group by site_id, session
+        order by first_hit asc
+    )
+    select
+        x.site_id,
+        x.session,
+        first.created_at as first_visit,
+        first.path_id    as entry_page,
+
+        (case
+			when jsonb_array_length(paths) = 1 then null
+			else last.created_at
+		end) as last_visit,
+
+        (case
+			when jsonb_array_length(paths) = 1 then null
+			else last.path_id
+		end) as exit_page,
+
+		(case
+			when jsonb_array_length(paths) = 1 then null
+			else x.paths
+		end) as paths
+    from x
+    join hits as first on first.hit_id = x.first_hit
+    join hits as last  on last.hit_id  = x.last_hit;
+
+create index "session_stats#site_id" on session_stats(site_id);

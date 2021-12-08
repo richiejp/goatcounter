@@ -280,6 +280,18 @@ func defaultWidgetSettings(ctx context.Context) map[string]WidgetSettings {
 			},
 			"key": WidgetSetting{Hidden: true},
 		},
+		"entrypages": map[string]WidgetSetting{
+			"limit": WidgetSetting{
+				Type:  "number",
+				Label: z18n.T(ctx, "widget-setting/label/page-size|Page size"),
+				Help:  z18n.T(ctx, "widget-setting/help/page-size|Number of pages to load"),
+				Value: float64(6),
+				Validate: func(v *zvalidate.Validator, val interface{}) {
+					v.Range("limit", int64(val.(float64)), 1, 20)
+				},
+			},
+			"key": WidgetSetting{Hidden: true},
+		},
 	}
 }
 
