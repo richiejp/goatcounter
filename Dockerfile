@@ -13,7 +13,9 @@ COPY --chown=builder:builder . .
 
 USER builder
 
-RUN go build -x -v -work ./cmd/goatcounter
+# if build fails, try this for more verbosity:
+# RUN go build -x -v -work ./cmd/goatcounter
+RUN go build -ldflags="-X zgo.at/goatcounter/v2.Version=$(git log -n1 --format='%h_%cI')" ./cmd/goatcounter
 
 FROM debian:buster-slim AS runtime
 
