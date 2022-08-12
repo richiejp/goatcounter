@@ -56,12 +56,57 @@ const (
 var States = []string{StateActive, StateRequest, StateDeleted}
 
 var SQLiteHook = func(c *sqlite3.SQLiteConn) error {
-	return c.RegisterFunc("percent_diff", func(start, final int) float64 {
+	err := c.RegisterFunc("percent_diff", func(start, final int) float64 {
 		if start == 0 {
 			return math.Inf(0)
 		}
 		return (float64(final - start)) / float64(start) * 100.0
 	}, true)
+	if err != nil {
+		return fmt.Errorf("registering percent_diff: %w", err)
+	}
+
+	// Kind of a simple implementation of PostgreSQL's date_trunc() function;
+	// works for "2022-10-25 06:05:50" ISO type format; doesn't work for unix
+	// timestamps.
+	err = c.RegisterFunc("date_trunc", func(field, source string) (string, error) {
+		switch field {
+		default:
+			return source, fmt.Errorf("date_trunc: unknown value for field: %q", field)
+		case "minute":
+			return source[:17] + "00", nil
+		case "hour":
+			return source[:14] + "00:00", nil
+		case "day":
+			return source[:11] + "00:00:00", nil
+		case "month":
+			return source[:8] + "01 00:00:00", nil
+		case "year":
+			return source[:5] + "01-01 00:00:00", nil
+
+		case "microseconds":
+			fallthrough
+		case "milliseconds":
+			fallthrough
+		case "second":
+			fallthrough
+		case "week":
+			fallthrough
+		case "quarter":
+			fallthrough
+		case "decade":
+			fallthrough
+		case "century":
+			fallthrough
+		case "millennium":
+			return source, fmt.Errorf("date_trunc: field %q not supported", field)
+		}
+		return source, nil // XXX
+	}, true)
+	if err != nil {
+		return fmt.Errorf("registering date_trunc: %w", err)
+	}
+	return nil
 }
 
 // TODO: Move to zdb

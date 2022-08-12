@@ -29,6 +29,7 @@ func (w Browsers) Type() string { return "hchart" }
 func (w Browsers) Label(ctx context.Context) string {
 	return z18n.T(ctx, "label/browser-stats|Browser stats")
 }
+func (w Browsers) Desc(ctx context.Context) string      { return "" }
 func (w *Browsers) SetHTML(h template.HTML)             { w.html = h }
 func (w Browsers) HTML() template.HTML                  { return w.html }
 func (w *Browsers) SetErr(h error)                      { w.err = h }

@@ -8,6 +8,7 @@
 				<strong class="main">{{$w.Label $.Context}}</strong>
 				{{$s := $w.Settings.Display $.Context $w.Name}}
 				{{if $s}}({{$s}}){{end}}
+				<p>{{$w.Desc $.Context}}</p>
 			</div>
 			<a href="#" class="dashboard-rm" tabindex="-1">{{$.T "button/remove|Remove"}}</a>
 		</div>

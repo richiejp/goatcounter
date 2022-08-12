@@ -535,7 +535,7 @@ func (s Site) IDOrParent() int64 {
 // user intact.
 func (s Site) DeleteAll(ctx context.Context) error {
 	return zdb.TX(ctx, func(ctx context.Context) error {
-		for _, t := range append(statTables, "campaign_stats", "hit_counts", "ref_counts", "hits", "paths") {
+		for _, t := range append(statTables, "campaign_stats", "hit_counts", "ref_counts", "site_counts", "hits", "paths") {
 			err := zdb.Exec(ctx, `delete from `+t+` where site_id=:id`, zdb.P{"id": s.ID})
 			if err != nil {
 				return errors.Wrap(err, "Site.DeleteAll: delete "+t)

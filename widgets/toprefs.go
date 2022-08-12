@@ -27,6 +27,7 @@ type TopRefs struct {
 func (w TopRefs) Name() string                         { return "toprefs" }
 func (w TopRefs) Type() string                         { return "hchart" }
 func (w TopRefs) Label(ctx context.Context) string     { return z18n.T(ctx, "label/topref|Top referrals") }
+func (w TopRefs) Desc(ctx context.Context) string      { return "" }
 func (w *TopRefs) SetHTML(h template.HTML)             { w.html = h }
 func (w TopRefs) HTML() template.HTML                  { return w.html }
 func (w *TopRefs) SetErr(h error)                      { w.err = h }

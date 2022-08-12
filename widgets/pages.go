@@ -34,9 +34,12 @@ type Pages struct {
 	Exclude                []int64
 }
 
-func (w Pages) Name() string                         { return "pages" }
-func (w Pages) Type() string                         { return "full-width" }
-func (w Pages) Label(ctx context.Context) string     { return z18n.T(ctx, "label/paths|Paths overview") }
+func (w Pages) Name() string                     { return "pages" }
+func (w Pages) Type() string                     { return "full-width" }
+func (w Pages) Label(ctx context.Context) string { return z18n.T(ctx, "label/paths|Pages overview") }
+func (w Pages) Desc(ctx context.Context) string {
+	return z18n.T(ctx, "help/paths|An overview of all pages with the number of visitors per page.")
+}
 func (w *Pages) SetHTML(h template.HTML)             { w.html = h }
 func (w Pages) HTML() template.HTML                  { return w.html }
 func (w *Pages) SetErr(h error)                      { w.err = h }

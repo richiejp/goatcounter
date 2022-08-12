@@ -17,6 +17,7 @@ type Dummy struct {
 func (w Dummy) Name() string                                                 { return "dummy" }
 func (w Dummy) Type() string                                                 { return "hchart" }
 func (w Dummy) Label(ctx context.Context) string                             { return "" }
+func (w Dummy) Desc(ctx context.Context) string                              { return "" }
 func (w *Dummy) SetHTML(h template.HTML)                                     {}
 func (w Dummy) HTML() template.HTML                                          { return "" }
 func (w *Dummy) SetErr(h error)                                              {}

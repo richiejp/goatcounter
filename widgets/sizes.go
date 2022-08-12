@@ -27,6 +27,7 @@ type Sizes struct {
 func (w Sizes) Name() string                         { return "sizes" }
 func (w Sizes) Type() string                         { return "hchart" }
 func (w Sizes) Label(ctx context.Context) string     { return z18n.T(ctx, "label/size-stats|Size stats") }
+func (w Sizes) Desc(ctx context.Context) string      { return "" }
 func (w *Sizes) SetHTML(h template.HTML)             { w.html = h }
 func (w Sizes) HTML() template.HTML                  { return w.html }
 func (w *Sizes) SetErr(h error)                      { w.err = h }

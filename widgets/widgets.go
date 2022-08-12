@@ -30,6 +30,7 @@ type (
 		Name() string
 		Type() string // "full-width", "hchart"
 		Label(context.Context) string
+		Desc(context.Context) string
 	}
 
 	Args struct {
@@ -134,13 +135,13 @@ func (l List) InitialAndLazy() (initial List, lazy List) {
 func ListAllWidgets() List {
 	return List{
 		NewWidget("browsers", 0),
-		NewWidget("locations", 0),
+		NewWidget("campaigns", 0),
 		NewWidget("languages", 0),
+		NewWidget("locations", 0),
 		NewWidget("pages", 0),
 		NewWidget("sizes", 0),
 		NewWidget("systems", 0),
 		NewWidget("toprefs", 0),
-		NewWidget("campaigns", 0),
 		NewWidget("totalpages", 0),
 	}
 }

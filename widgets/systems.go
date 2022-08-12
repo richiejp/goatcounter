@@ -29,6 +29,7 @@ func (w Systems) Type() string { return "hchart" }
 func (w Systems) Label(ctx context.Context) string {
 	return z18n.T(ctx, "label/system-stats|System stats")
 }
+func (w Systems) Desc(ctx context.Context) string      { return "" }
 func (w *Systems) SetHTML(h template.HTML)             { w.html = h }
 func (w Systems) HTML() template.HTML                  { return w.html }
 func (w *Systems) SetErr(h error)                      { w.err = h }

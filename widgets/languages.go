@@ -28,6 +28,7 @@ func (w Languages) Type() string { return "hchart" }
 func (w Languages) Label(ctx context.Context) string {
 	return z18n.T(ctx, "label/language-stats|Language stats")
 }
+func (w Languages) Desc(ctx context.Context) string      { return "" }
 func (w *Languages) SetHTML(h template.HTML)             { w.html = h }
 func (w Languages) HTML() template.HTML                  { return w.html }
 func (w *Languages) SetErr(h error)                      { w.err = h }

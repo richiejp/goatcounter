@@ -53,10 +53,11 @@ type Hit struct {
 	Random string   `db:"-" json:"rnd"` // Browser cache buster, as they don't always listen to Cache-Control
 
 	// Some values we need to pass from the HTTP handler to memstore
-	RemoteAddr    string `db:"-" json:"-"`
-	UserSessionID string `db:"-" json:"-"`
-	BrowserID     int64  `db:"-" json:"-"`
-	SystemID      int64  `db:"-" json:"-"`
+	RemoteAddr     string `db:"-" json:"-"`
+	UserSessionID  string `db:"-" json:"-"`
+	BrowserID      int64  `db:"-" json:"-"`
+	SystemID       int64  `db:"-" json:"-"`
+	FirstSiteVisit bool   `db:"-" json:"-"`
 
 	// Don't process in memstore; for merging paths.
 	noProcess bool `db:"-" json:"-"`
@@ -369,6 +370,11 @@ func (h *Hits) Purge(ctx context.Context, pathIDs []int64) error {
 
 	return zdb.TX(ctx, func(ctx context.Context) error {
 		site := MustGetSite(ctx).ID
+
+		err := zdb.Exec(ctx, `delete from site_counts where site_id=?`, site)
+		if err != nil {
+			return errors.Wrap(err, "Hits.Purge site_counts")
+		}
 
 		for _, t := range append(statTables, "hit_counts", "ref_counts", "hits", "paths") {
 			err := zdb.Exec(ctx, fmt.Sprintf(query, t), site, pathIDs)

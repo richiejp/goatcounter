@@ -1,0 +1,54 @@
+create table site_counts (
+	site_id        integer        not null,
+
+	hour           timestamp      not null                 {{check_timestamp "hour"}},
+	total          integer        not null,
+	total_unique   integer        not null,
+	event          integer        not null default 0,
+
+	constraint "site_counts#site_id#hour" unique(site_id, hour) {{sqlite "on conflict replace"}}
+);
+{{cluster "site_counts" "site_counts#site_id#hour"}}
+{{replica "site_counts" "site_counts#site_id#hour"}}
+
+-- Migrate existing data.
+insert into site_counts (site_id, hour, total, total_unique)
+	with
+		-- Group rows by session, select the one with the first date for this
+		-- session.
+		uniq1 as (
+			select
+				site_id,
+				date_trunc('hour', min(created_at)) as hour,
+				count(*)                            as total_unique
+			from hits
+			where first_visit = 1 and bot = 0
+			group by site_id, session
+		),
+		-- Now group this by hour.
+		uniq2 as (
+			select
+				site_id,
+				hour,
+				sum(total_unique) as total_unique
+			from uniq1
+			group by site_id, hour
+		),
+		-- Get pageview counts
+		total as (
+			select
+				site_id,
+				date_trunc('hour', created_at) as hour,
+				count(*)                       as total
+			from hits
+			where bot = 0
+			group by site_id, hour
+		)
+	select
+		uniq2.site_id,
+		uniq2.hour,
+		total.total,
+		uniq2.total_unique
+	from uniq2
+	join total on total.site_id = uniq2.site_id and total.hour = uniq2.hour
+	order by uniq2.site_id, uniq2.hour desc

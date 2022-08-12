@@ -29,6 +29,7 @@ func (w Locations) Type() string { return "hchart" }
 func (w Locations) Label(ctx context.Context) string {
 	return z18n.T(ctx, "label/loc-stats|Location stats")
 }
+func (w Locations) Desc(ctx context.Context) string      { return "" }
 func (w *Locations) SetHTML(h template.HTML)             { w.html = h }
 func (w Locations) HTML() template.HTML                  { return w.html }
 func (w *Locations) SetErr(h error)                      { w.err = h }

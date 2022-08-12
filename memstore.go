@@ -297,14 +297,15 @@ func (m *ms) processHit(ctx context.Context, h *Hit) bool {
 	}
 
 	if h.Session.IsZero() && site.Settings.Collect.Has(CollectSession) {
-		h.Session, h.FirstVisit = m.session(ctx, site.ID, h.PathID, h.UserSessionID, h.UserAgentHeader, h.RemoteAddr)
+		h.Session, h.FirstVisit, h.FirstSiteVisit = m.session(
+			ctx, site.ID, h.PathID, h.UserSessionID, h.UserAgentHeader, h.RemoteAddr)
 	}
 
 	if !site.Settings.Collect.Has(CollectSession) {
 		h.Session = zint.Uint128{}
 		h.FirstVisit = false
+		h.FirstSiteVisit = false
 	}
-
 	if !site.Settings.Collect.Has(CollectReferrer) {
 		h.Query = ""
 		h.Ref = ""
@@ -399,7 +400,9 @@ func (m *ms) SessionID() zint.Uint128 {
 	return UUID()
 }
 
-func (m *ms) session(ctx context.Context, siteID, pathID int64, userSessionID, ua, remoteAddr string) (zint.Uint128, zbool.Bool) {
+func (m *ms) session(ctx context.Context, siteID, pathID int64, userSessionID, ua, remoteAddr string) (
+	zint.Uint128, zbool.Bool, bool,
+) {
 	sessionHash := hash{userSessionID}
 
 	if userSessionID == "" {
@@ -428,7 +431,7 @@ func (m *ms) session(ctx context.Context, siteID, pathID int64, userSessionID, u
 		if !seenPath {
 			m.sessionPaths[id][pathID] = struct{}{}
 		}
-		return id, zbool.Bool(!seenPath)
+		return id, zbool.Bool(!seenPath), false
 	}
 
 	// New session
@@ -437,5 +440,5 @@ func (m *ms) session(ctx context.Context, siteID, pathID int64, userSessionID, u
 	m.sessionPaths[id] = map[int64]struct{}{pathID: struct{}{}}
 	m.sessionSeen[id] = ztime.Now().Unix()
 	m.sessionHashes[id] = sessionHash
-	return id, true
+	return id, true, true
 }

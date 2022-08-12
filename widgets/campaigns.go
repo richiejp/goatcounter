@@ -28,6 +28,7 @@ type Campaigns struct {
 func (w Campaigns) Name() string                         { return "campaigns" }
 func (w Campaigns) Type() string                         { return "hchart" }
 func (w Campaigns) Label(ctx context.Context) string     { return z18n.T(ctx, "label/campaigns|Campaigns") }
+func (w Campaigns) Desc(ctx context.Context) string      { return "" }
 func (w *Campaigns) SetHTML(h template.HTML)             { w.html = h }
 func (w Campaigns) HTML() template.HTML                  { return w.html }
 func (w *Campaigns) SetErr(h error)                      { w.err = h }

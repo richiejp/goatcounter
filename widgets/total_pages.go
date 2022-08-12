@@ -29,7 +29,10 @@ type TotalPages struct {
 func (w TotalPages) Name() string { return "totalpages" }
 func (w TotalPages) Type() string { return "full-width" }
 func (w TotalPages) Label(ctx context.Context) string {
-	return z18n.T(ctx, "label/total-pageviews|Total site pageviews")
+	return z18n.T(ctx, "label/site-totals|Site totals")
+}
+func (w TotalPages) Desc(ctx context.Context) string {
+	return z18n.T(ctx, "help/site-totals|Number of total visitors for the entire site.")
 }
 func (w *TotalPages) SetHTML(h template.HTML)             { w.html = h }
 func (w TotalPages) HTML() template.HTML                  { return w.html }

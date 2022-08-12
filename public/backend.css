@@ -313,6 +313,7 @@ tr.target .chart-left { display: block; }
 .widget .header         { display: flex; justify-content: space-between; padding: .5em; }
 .widget .header strong  { display: inline-block; width: 12em; }
 .widget .show-s         { display: inline-block; width: 2em; text-align: center; }
+.widget p               { margin: 0; margin-left: 2.5em; }
 .widget-save            { display: flex; justify-content: space-between; }
 .widget-settings label  { display: inline-block; min-width: 9em; margin-bottom: 1em; }
 .widget-settings button { margin-left: 0; }

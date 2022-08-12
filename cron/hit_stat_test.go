@@ -12,6 +12,7 @@ import (
 	"zgo.at/goatcounter/v2"
 	"zgo.at/goatcounter/v2/gctest"
 	"zgo.at/zstd/zjson"
+	"zgo.at/zstd/ztest"
 	"zgo.at/zstd/ztime"
 )
 
@@ -48,15 +49,21 @@ func TestHitStats(t *testing.T) {
 			t.Fatalf("len(stats) is not 2: %d", len(stats))
 		}
 
-		got0 := string(zjson.MustMarshal(stats[0]))
-		if got0 != want0 {
-			t.Errorf("first wrong\nhave: %s\nwant: %s", got0, want0)
+		have0 := string(zjson.MustMarshal(stats[0]))
+		if d := ztest.Diff(have0, want0, ztest.DiffJSON, ztest.DiffVerbose); d != "" {
+			t.Errorf("first wrong\n%s", d)
 		}
+		//if got0 != want0 {
+		//	t.Errorf("first wrong\nwant: %s\nwant: %s", got0, want0)
+		//}
 
-		got1 := string(zjson.MustMarshal(stats[1]))
-		if got1 != want1 {
-			t.Errorf("second wrong\nhave: %s\nwant: %s", got1, want1)
+		have1 := string(zjson.MustMarshal(stats[1]))
+		if d := ztest.Diff(have1, want1, ztest.DiffJSON, ztest.DiffVerbose); d != "" {
+			t.Errorf("second wrong\n%s", d)
 		}
+		//if got1 != want1 {
+		//	t.Errorf("second wrong\nwant: %s\nwant: %s", got1, want1)
+		//}
 	}
 
 	check("3 1 false",
@@ -69,6 +76,7 @@ func TestHitStats(t *testing.T) {
 			`"hourly":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],`+
 			`"hourly_unique":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"daily":1,"daily_unique":0}]}`,
 	)
+	return
 
 	gctest.StoreHits(ctx, t, false, []goatcounter.Hit{
 		{Site: site.ID, CreatedAt: now.Add(2 * time.Hour), Path: "/asd", Title: "aSd", FirstVisit: true},

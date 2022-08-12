@@ -150,6 +150,7 @@ func UpdateStats(ctx context.Context, site *goatcounter.Site, siteID int64, hits
 	funs := []func(context.Context, []goatcounter.Hit) error{
 		updateHitCounts,
 		updateRefCounts,
+		updateSiteCounts,
 		updateHitStats,
 		updateBrowserStats,
 		updateSystemStats,
