@@ -17,7 +17,7 @@ USER builder
 # RUN go build -x -v -work ./cmd/goatcounter
 RUN go build -ldflags="-X zgo.at/goatcounter/v2.Version=$(git log -n1 --format='%h_%cI')" ./cmd/goatcounter
 
-FROM debian:buster-slim AS runtime
+FROM debian:bookworm-slim AS runtime
 
 RUN groupadd -K GID_MIN=65536 -K GID_MAX=4294967293 user && \
         useradd --no-log-init --create-home -K UID_MIN=65536 -K UID_MAX=4294967293 --gid user user && \
