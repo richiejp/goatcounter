@@ -1,0 +1,28 @@
+# flyctl launch added from .gitignore
+# "go build" binary.
+goatcounter
+goatcounter.*
+goatcounter-*
+
+# UPX creates temporary files.
+**/*.upx
+
+# dist directory from gogo-release
+dist
+
+# SQLite3 database; may also store journal hence last *.
+**/*.sqlite3*
+
+# Never store certificates.
+**/*.pem
+
+# Default acme-secrets.
+acme-secrets
+
+# Coverage reports
+coverage
+coverage.*
+
+# Dev log
+.dev.log
+fly.toml

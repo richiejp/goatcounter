@@ -34,4 +34,4 @@ VOLUME ["/home/user/db/"]
 EXPOSE 8080
 
 ENTRYPOINT ["/usr/local/bin/goatcounter"]
-CMD ["help"]
+CMD ["serve", "-automigrate", "-store-every=1", "-listen=:8080", "-tls=http"]
